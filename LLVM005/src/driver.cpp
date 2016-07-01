@@ -1,3 +1,11 @@
+#include "lexer.h"
+#include "parser.h"
+#include "expr.h"
+#include "llvm/IR/Verifier.h"
+#include "llvm/ExecutionEngine/GenericValue.h"
+#include "llvm/ExecutionEngine/ExecutionEngine.h"
+#include "llvm/Support/TargetSelect.h"
+
 // Creates entry function from module
 llvm::Function *createEntryFunction(llvm::Module *module, llvm::LLVMContext &context);
 
@@ -43,11 +51,8 @@ llvm::Function *createEntryFunction(llvm::Module *module, llvm::LLVMContext &con
 llvm::ExecutionEngine* createEngine(llvm::Module *module) {
 	llvm::InitializeNativeTarget();
 	std::string errStr;
-	llvm::ExecutionEngine * engine =
-	 llvm::EngineBuilder(module)
-	 .setErrorStr(&errStr)
-	 .setEngineKind(llvm::EngineKind::JIT)
-	 .create();
+	llvm::ExecutionEngine *engine = 
+          llvm::EngineBuilder(std::unique_ptr<llvm::Module>(module)).setErrorStr(&errStr).setEngineKind(llvm::EngineKind::JIT).create();
 	if (!engine) {
 		llvm::errs() << "Failed to construct ExecutionEngine:" << errStr << "\n";
 	} else if (llvm::verifyModule(*module)) {
