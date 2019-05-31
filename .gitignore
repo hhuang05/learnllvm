@@ -3,3 +3,7 @@
 *.o
 *.dot
 *.png
+*/analysis/*
+*/build/*
+*.bc
+*.ll

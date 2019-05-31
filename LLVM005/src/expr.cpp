@@ -4,11 +4,12 @@
  */
 #include "expr.h"
 
+
 llvm::Value* VarExpr::varValue = NULL;
 
 llvm::Value* NumExpr::gen(llvm::IRBuilder<> *builder,
 		llvm::LLVMContext &context) const {
-	return llvm::ConstantInt::get(llvm::Type::getInt32Ty(context), num);
+	return llvm::ConstantInt::get(llvm::Type::getInt32Ty(context), llvm::APInt(SIZE_INT, num));
 }
 
 llvm::Value* VarExpr::gen(llvm::IRBuilder<> *builder,
